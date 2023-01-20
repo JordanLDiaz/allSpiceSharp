@@ -68,3 +68,7 @@ Set
     img = 'https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGl6emF8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60',
     category = 'Entree'
 WHERE id = 2;
+
+SELECT recipes.*, accounts.*
+FROM recipes
+    JOIN accounts ON accounts.id = recipes.creatorId;

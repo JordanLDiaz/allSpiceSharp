@@ -8,6 +8,23 @@ public class RecipesRepository
     _db = db;
   }
 
+  internal List<Recipe> GetAllRecipes()
+  {
+    string sql = @"
+    SELECT 
+    recipes.*,
+    accounts.*
+    FROM recipes
+    JOIN accounts ON accounts.id = recipes.creatorId;
+    ";
+    List<Recipe> recipes = _db.Query<Recipe, Account, Recipe>(sql, (recipe, account) =>
+    {
+      recipe.Creator = account;
+      return recipe;
+    }).ToList();
+    return recipes;
+  }
+
   internal Recipe Create(Recipe recipeData)
   {
     string sql = @"
