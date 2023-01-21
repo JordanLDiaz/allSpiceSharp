@@ -72,3 +72,5 @@ WHERE id = 2;
 SELECT recipes.*, accounts.*
 FROM recipes
     JOIN accounts ON accounts.id = recipes.creatorId;
+
+DELETE from recipes WHERE id = 2;
