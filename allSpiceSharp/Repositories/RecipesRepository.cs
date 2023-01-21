@@ -71,12 +71,12 @@ public class RecipesRepository
     return rows > 0;
   }
 
-  internal void RemoveRecipe(int id)
+  internal void RemoveRecipe(int recipeId)
   {
     string sql = @"
       DELETE FROM recipes
-      WHERE id = @id;
+      WHERE recipes.id = @recipeId;
     ";
-    _db.Execute(sql, new { id });
+    _db.Execute(sql, new { recipeId });
   }
 }
