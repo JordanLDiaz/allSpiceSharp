@@ -44,13 +44,13 @@ public class IngredientsRepository
     return _db.Query<Ingredient>(sql, new { recipeId }).ToList();
   }
 
-  internal bool RemoveIngredient(int ingredientId)
+  internal bool RemoveIngredient(int id)
   {
     string sql = @"
     DELETE FROM ingredients
-    WHERE ingredientId = @ingredientId;
+    WHERE id = @id;
     ";
-    int rows = _db.Execute(sql, new { ingredientId });
+    int rows = _db.Execute(sql, new { id });
     return rows > 0;
   }
 }
