@@ -6,10 +6,12 @@ public class RecipesController : ControllerBase
 {
   private readonly RecipesService _recipesService;
   private readonly Auth0Provider _auth0provider;
-  public RecipesController(RecipesService recipesService, Auth0Provider auth0provider)
+  private readonly IngredientsService _ingredientsService;
+  public RecipesController(RecipesService recipesService, Auth0Provider auth0provider, IngredientsService ingredientsService)
   {
     _recipesService = recipesService;
     _auth0provider = auth0provider;
+    _ingredientsService = ingredientsService;
   }
 
   [HttpGet]
@@ -27,14 +29,29 @@ public class RecipesController : ControllerBase
     }
   }
 
-  [HttpGet("{recipeId}")]
-  public async Task<ActionResult<Recipe>> GetOneRecipe(int recipeId)
+  [HttpGet("{id}")]
+  public async Task<ActionResult<Recipe>> GetOneRecipe(int id)
   {
     try
     {
       Account userInfo = await _auth0provider.GetUserInfoAsync<Account>(HttpContext);
-      Recipe recipe = _recipesService.GetOneRecipe(recipeId, userInfo?.Id);
+      Recipe recipe = _recipesService.GetOneRecipe(id);
       return Ok(recipe);
+    }
+    catch (Exception e)
+    {
+      return BadRequest(e.Message);
+    }
+  }
+
+  [HttpGet("{id}/ingredients")]
+  public async Task<ActionResult<Ingredient>> GetIngredients(int id)
+  {
+    try
+    {
+      Account userInfo = await _auth0provider.GetUserInfoAsync<Account>(HttpContext);
+      List<Ingredient> ingredients = _ingredientsService.GetIngredientsByRecipeId(id, userInfo?.Id);
+      return Ok(ingredients);
     }
     catch (Exception e)
     {
@@ -60,16 +77,16 @@ public class RecipesController : ControllerBase
     }
   }
 
-  [HttpPut("{recipeId}")]
+  [HttpPut("{id}")]
   [Authorize]
-  public async Task<ActionResult<Recipe>> EditRecipe([FromBody] Recipe recipeEdit, int recipeId)
+  public async Task<ActionResult<Recipe>> EditRecipe([FromBody] Recipe recipeData, int id)
   {
     try
     {
       Account userInfo = await _auth0provider.GetUserInfoAsync<Account>(HttpContext);
-      recipeEdit.CreatorId = userInfo.Id;
-      Recipe recipe = _recipesService.EditRecipe(recipeEdit, recipeId, userInfo.Id);
-      return Ok(recipe);
+      recipeData.CreatorId = userInfo.Id;
+      Recipe editedRecipe = _recipesService.EditRecipe(recipeData, id, userInfo.Id);
+      return Ok(editedRecipe);
     }
     catch (Exception e)
     {
@@ -77,14 +94,14 @@ public class RecipesController : ControllerBase
     }
   }
 
-  [HttpDelete("{recipeId}")]
+  [HttpDelete("{id}")]
   [Authorize]
-  public async Task<ActionResult<string>> RemoveRecipe(int recipeId)
+  public async Task<ActionResult<string>> RemoveRecipe(int id)
   {
     try
     {
       Account userInfo = await _auth0provider.GetUserInfoAsync<Account>(HttpContext);
-      string message = _recipesService.RemoveRecipe(recipeId, userInfo?.Id);
+      string message = _recipesService.RemoveRecipe(id, userInfo.Id);
       return Ok(message);
     }
     catch (Exception e)

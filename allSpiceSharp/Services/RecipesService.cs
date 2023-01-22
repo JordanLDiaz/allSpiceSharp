@@ -13,9 +13,9 @@ public class RecipesService
     List<Recipe> recipes = _repo.GetAllRecipes();
     return recipes;
   }
-  internal Recipe GetOneRecipe(int recipeId, string userId)
+  internal Recipe GetOneRecipe(int id)
   {
-    Recipe recipe = _repo.GetOneRecipe(recipeId);
+    Recipe recipe = _repo.GetOneRecipe(id);
     if (recipe == null)
     {
       throw new Exception("No recipe at this id.");
@@ -28,13 +28,17 @@ public class RecipesService
     return recipe;
   }
 
-  internal Recipe EditRecipe(Recipe recipeEdit, int recipeId, string userId)
+  internal Recipe EditRecipe(Recipe recipeData, int id, string userId)
   {
-    Recipe original = GetOneRecipe(recipeId, userId);
-    original.Title = recipeEdit.Title ?? original.Title;
-    original.Instructions = recipeEdit.Instructions ?? original.Instructions;
-    original.Img = recipeEdit.Img ?? original.Img;
-    original.Category = recipeEdit.Category ?? original.Category;
+    Recipe original = GetOneRecipe(id);
+    if (original.CreatorId != userId)
+    {
+      throw new Exception("Not your recipe to edit.");
+    }
+    original.Title = recipeData.Title ?? original.Title;
+    original.Instructions = recipeData.Instructions ?? original.Instructions;
+    original.Img = recipeData.Img ?? original.Img;
+    original.Category = recipeData.Category ?? original.Category;
 
     bool edited = _repo.EditRecipe(original);
     if (edited == false)
@@ -44,15 +48,15 @@ public class RecipesService
     return original;
   }
 
-  internal string RemoveRecipe(int recipeId, string userId)
+  internal string RemoveRecipe(int id, string userId)
   {
-    Recipe original = GetOneRecipe(recipeId, userId);
+    Recipe original = GetOneRecipe(id);
     if (original.CreatorId != userId)
     {
       throw new Exception("You don't have permission to delete.");
     }
 
-    _repo.RemoveRecipe(recipeId);
-    return $"{original.Title} was deleted.";
+    string message = _repo.RemoveRecipe(id);
+    return message;
   }
 }

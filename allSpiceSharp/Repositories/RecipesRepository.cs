@@ -25,7 +25,7 @@ public class RecipesRepository
     return recipes;
   }
 
-  internal Recipe GetOneRecipe(int recipeId)
+  internal Recipe GetOneRecipe(int id)
   {
     string sql = @"
     SELECT
@@ -33,13 +33,13 @@ public class RecipesRepository
     accounts.*
     FROM recipes
     JOIN accounts ON accounts.id = recipes.creatorId
-    WHERE recipes.id = @recipeId;
+    WHERE recipes.id = @id;
     ";
     return _db.Query<Recipe, Account, Recipe>(sql, (recipe, account) =>
     {
       recipe.Creator = account;
       return recipe;
-    }, new { recipeId }).FirstOrDefault();
+    }, new { id }).FirstOrDefault();
   }
 
   internal Recipe Create(Recipe recipeData)
@@ -71,12 +71,13 @@ public class RecipesRepository
     return rows > 0;
   }
 
-  internal void RemoveRecipe(int recipeId)
+  internal string RemoveRecipe(int id)
   {
     string sql = @"
       DELETE FROM recipes
-      WHERE recipes.id = @recipeId;
+      WHERE id = @id;
     ";
-    _db.Execute(sql, new { recipeId });
+    _db.Execute(sql, new { id });
+    return "Recipe was deleted";
   }
 }
