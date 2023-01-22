@@ -1,39 +1,71 @@
 <template>
   <div class="container-fluid">
     <!-- SECTION Banner -->
-    <div class="row">
-      <div class="col-12">
+    <section class="row mt-2">
+      <div class="col-12 text-center">
+        <img src="../assets/img/AllSpice_Banner.png" alt="banner" class="elevation-5 rounded">
       </div>
-    </div>
+    </section>
+
+
+    <!-- SECTION Home | My Recipes | Favorites -->
+    <section class="row mt-2 justify-content-center my-2">
+      <div class="col-4 d-flex justify-content-between">
+        <button class="btn btn-success bg-success text-light mx-1">Home</button>
+        <button class="btn btn-success bg-success text-light mx-1">My Recipes</button>
+        <button class="btn btn-success bg-success text-light mx-1">Favorites</button>
+      </div>
+    </section>
+
+    <!-- SECTION Recipes -->
+    <section class="row justify-content-around">
+      <div v-for="r in recipes" :key="r.id" class="col-4 p-5">
+        <RecipeCard :recipe="r" />
+      </div>
+    </section>
   </div>
+
+  <!-- SECTION Add Recipe Button -->
+  <section class="position-fixed bottom-0 end-0 p-2">
+    <h1>
+      <i class="mdi mdi-plus-circle selectable text-success" title="=Add Recipe"></i>
+    </h1>
+
+  </section>
 </template>
 
 <script>
+import { onMounted, computed } from "vue";
+import { AppState } from "../AppState.js";
+import { logger } from "../utils/Logger.js";
+import Pop from "../utils/Pop.js";
+import { recipesService } from '../services/RecipesService.js'
+
 export default {
   setup() {
-    return {}
+    async function getRecipes() {
+      try {
+        await recipesService.getRecipes();
+      } catch (error) {
+        logger.error(error)
+        Pop.error(error.message)
+      }
+    }
+    onMounted(() => getRecipes())
+    return {
+      recipes: computed(() => AppState.recipes)
+    }
   }
 }
 </script>
 
 <style scoped lang="scss">
-.home {
-  display: grid;
-  height: 80vh;
-  place-content: center;
-  text-align: center;
-  user-select: none;
+img {
+  height: 35vh;
+  width: 95vw;
+}
 
-  .home-card {
-    width: 50vw;
-
-    >img {
-      height: 200px;
-      max-width: 200px;
-      width: 100%;
-      object-fit: contain;
-      object-position: center;
-    }
-  }
+button {
+  width: 40vw;
 }
 </style>
