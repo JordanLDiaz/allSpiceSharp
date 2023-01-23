@@ -21,4 +21,25 @@ public class FavoritesService
     List<MyFavorite> myFavorites = _repo.GetFavoritesByAccountId(userId);
     return myFavorites;
   }
+
+  internal Favorite GetOneFavorite(int id)
+  {
+    Favorite favorite = _repo.GetOneFavorite(id);
+    if (favorite == null)
+    {
+      throw new Exception("No favorite at this id.");
+    }
+    return favorite;
+  }
+
+  internal string RemoveFavorite(int id, string userId)
+  {
+    Favorite original = GetOneFavorite(id);
+    bool deleted = _repo.RemoveFavorite(id);
+    if (deleted == false)
+    {
+      throw new Exception("No favorite was removed.");
+    }
+    return "Favorite was removed.";
+  }
 }
