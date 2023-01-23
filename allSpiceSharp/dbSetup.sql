@@ -25,6 +25,12 @@ ALTER TABLE recipes
 ADD
     img VARCHAR(255) NOT NULL DEFAULT 'https://images.unsplash.com/photo-1633981744930-15bb79ca2c41?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
 
+SELECT recipes.*, accounts.*
+FROM recipes
+    JOIN accounts ON accounts.id = recipes.creatorId;
+
+DELETE from recipes WHERE id = 2;
+
 CREATE TABLE
     IF NOT EXISTS ingredients(
         id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -46,6 +52,16 @@ CREATE TABLE
         FOREIGN KEY (accountId) REFERENCES accounts (id) ON DELETE CASCADE,
         FOREIGN KEY (recipeId) REFERENCES recipes (id) ON DELETE CASCADE
     ) default charset utf8 COMMENT '';
+
+INSERT INTO
+    favorites (accountId, recipeId)
+VALUES ('639c98024e8bdfbd33b7666a', 3);
+
+SELECT
+    accounts.*,
+    favorites.id
+FROM favorites
+    JOIN accounts ON favorites.`accountId` = accounts.id;
 
 INSERT INTO
     recipes (
@@ -72,9 +88,3 @@ Set
     img = 'https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cGl6emF8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60',
     category = 'Entree'
 WHERE id = 2;
-
-SELECT recipes.*, accounts.*
-FROM recipes
-    JOIN accounts ON accounts.id = recipes.creatorId;
-
-DELETE from recipes WHERE id = 2;
