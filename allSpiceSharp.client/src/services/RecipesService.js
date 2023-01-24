@@ -8,6 +8,12 @@ class RecipesService {
     logger.log('[GETTING ALL RECIPES]', res.data)
     AppState.recipes = res.data
   }
+
+  // async getFavorites() {
+  //   const res = await api.get('api/account/favorites')
+  //   logger.log('[GETTING MY FAVORITES]', res.data)
+  //   AppState.recipes = res.data
+  // }
 }
 
 export const recipesService = new RecipesService();

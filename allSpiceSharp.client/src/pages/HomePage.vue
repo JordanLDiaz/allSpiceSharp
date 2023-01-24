@@ -11,9 +11,9 @@
     <!-- SECTION Home | My Recipes | Favorites -->
     <section class="row mt-2 justify-content-center my-2">
       <div class="col-4 d-flex justify-content-between">
-        <button class="btn btn-success bg-success text-light mx-1">Home</button>
-        <button class="btn btn-success bg-success text-light mx-1">My Recipes</button>
-        <button class="btn btn-success bg-success text-light mx-1">Favorites</button>
+        <button @click="getRecipes()" class="btn btn-success bg-success text-light mx-1">Home</button>
+        <button @click="getMyRecipes()" class="btn btn-success bg-success text-light mx-1">My Recipes</button>
+        <button @click="getFavorites()" class="btn btn-success bg-success text-light mx-1">Favorites</button>
       </div>
     </section>
 
@@ -53,7 +53,20 @@ export default {
     }
     onMounted(() => getRecipes())
     return {
-      recipes: computed(() => AppState.recipes)
+      recipes: computed(() => AppState.recipes),
+      getRecipes,
+      getMyRecipes() {
+        AppState.recipes = AppState.recipes.filter(r => r.creatorId == AppState.account.id);
+      },
+
+      //   async getFavorites() {
+      //     try {
+      //       await recipesService.getFavorites();
+      //     } catch (error) {
+      //       logger.error(error)
+      //       Pop.error(error.message)
+      //     }
+      // }
     }
   }
 }
