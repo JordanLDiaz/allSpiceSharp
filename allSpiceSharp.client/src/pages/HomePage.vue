@@ -70,7 +70,7 @@ import ModalComponent from "../components/ModalComponent.vue";
 
 export default {
   setup() {
-    const editable = ref({})
+    const editable = ref('')
 
     async function getRecipes() {
       try {
@@ -104,7 +104,7 @@ export default {
       async searchRecipes() {
         try {
           await recipesService.searchRecipes(editable.value)
-          this.editable = {}
+          this.editable = ''
         } catch (error) {
           logger.error(error)
           Pop.error(error.message)

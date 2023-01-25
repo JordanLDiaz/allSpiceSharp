@@ -1,6 +1,6 @@
 <template>
   <div @click="setActiveRecipe(recipe)" class="row elevation-5 rounded selectable" data-bs-toggle="modal"
-    data-bs-target="#recipeDetailsModal">
+    data-bs-target="#recipeDetailModal">
     <div class="col-12">
       <img :src="recipe.img" alt="" class="img-fluid selectable recipe-img pt-2">
     </div>

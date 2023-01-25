@@ -13,16 +13,18 @@
             <button type="button" class="btn-close me-2 mt-2" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="row">
-            <h3 class="text-success">{{ activeRecipe.title }}</h3>
-            <h5>{{ activeRecipe.category }}</h5>
+            <h2 class="text-success">{{ activeRecipe.title }}</h2>
+            <h4>{{ activeRecipe.category }}</h4>
           </div>
           <div class="row">
             <div class="col-6 card p-0">
-              <div class="bg-success text-center">Recipe Ingredients</div>
-              <div class="">{{ activeRecipe.ingredients }}</div>
+              <h5 class="bg-success text-center py-1">Recipe Ingredients</h5>
+              <div v-for="i in ingredients" :key="i.id">
+                <Ingredients :ingredient="i" />
+              </div>
             </div>
             <div class="col-6 card p-0">
-              <div class="bg-success text-center">Recipe Instructions</div>
+              <h5 class="bg-success text-center py-1">Recipe Instructions</h5>
               <div class="">{{ activeRecipe.instructions }}</div>
             </div>
           </div>

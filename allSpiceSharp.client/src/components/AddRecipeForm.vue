@@ -4,8 +4,8 @@
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
 
-  <div class="modal-body">
-    <form @submit.prevent="createRecipe">
+  <form @submit.prevent="createRecipe">
+    <div class="modal-body">
       <div class="row">
         <div class="col-6">
           <label for="title" class="form-label">Title</label>
@@ -35,16 +35,21 @@
           <input v-model="editable.img" type="text" maxlength="250" class="form-control" id="img"
             placeholder="Image Url..." required>
         </div>
+        <div class="col-12">
+          <label for="instructions" class="form-label">Recipe Instructions</label>
+          <input v-model="editable.instructions" type="text" class="form-control" id="instructions"
+            placeholder="Add your instructions here..." required>
+        </div>
       </div>
       <div class="row">
-        <p class="text-center mt-3">You will add ingredients and instructions after your recipe is created!</p>
+        <p class="text-center mt-3">You will add ingredients after your recipe is created!</p>
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-success bg-success">Add Recipe</button>
         <button type="button" class="btn" data-bs-dismiss="modal">Close</button>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
 </template>
 
 
@@ -54,6 +59,8 @@ import { computed, reactive, onMounted, ref } from 'vue';
 import { recipesService } from "../services/RecipesService.js";
 import { logger } from "../utils/Logger.js";
 import Pop from "../utils/Pop.js";
+import { Modal } from 'bootstrap';
+
 export default {
   setup() {
     const editable = ref({})
@@ -64,8 +71,8 @@ export default {
         try {
           await recipesService.createRecipe(editable.value)
           editable.value = {}
-          Modal.getOrCreateInstance('#addRecipeModal').hide()
-          // Modal.getOrCreateInstance('#exampleModal').show()
+          Modal.getOrCreateInstance('#addRecipeForm').hide()
+          Modal.getOrCreateInstance('#recipeDetailModal').show()
         } catch (error) {
           logger.error(error)
           Pop.error(error.message)

@@ -8,7 +8,7 @@
   <footer class="bg-success text-light">
     Made with 💖 by Jordan
   </footer>
-  <ModalComponent id="recipeDetailsModal">
+  <ModalComponent id="recipeDetailModal">
     <RecipeDetailsModal />
   </ModalComponent>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div class="modal fade" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
       <div class="modal-content">
         <slot></slot>
       </div>

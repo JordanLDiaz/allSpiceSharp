@@ -18,8 +18,9 @@ class RecipesService {
   async createRecipe(formData) {
     const res = await api.post('api/recipes', formData)
     logger.log(['CREATING RECIPE'], res.data)
-    // AppState.activeRecipe = res.data
+    AppState.activeRecipe = res.data
     AppState.recipes.push(res.data)
+    return res.data
   }
 
   async searchRecipes(query) {
