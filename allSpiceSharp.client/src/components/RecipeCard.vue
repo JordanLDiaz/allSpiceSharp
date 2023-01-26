@@ -9,7 +9,7 @@
     <div class="col-11">
       <h4>{{ recipe.title }}</h4>
     </div>
-    <h3 class="col-1 p-1"><i class="mdi mdi-heart text-success selectable"></i></h3>
+    <h3 class="col-1 p-1"><i class="mdi mdi-heart text-success"></i></h3>
   </div>
 </template>
 
@@ -20,6 +20,7 @@ import { computed, reactive, onMounted } from 'vue';
 import { logger } from "../utils/Logger.js";
 import Pop from "../utils/Pop.js";
 import { recipesService } from "../services/RecipesService.js";
+import { ingredientsService } from "../services/IngredientsService.js";
 
 export default {
   props: {
@@ -28,9 +29,12 @@ export default {
 
   setup(props) {
     return {
-      setActiveRecipe(recipe) {
+      async setActiveRecipe(recipe) {
         AppState.activeRecipe = recipe
-      }
+        await ingredientsService.getIngredients(recipe.id)
+      },
+
+
     }
   }
 }

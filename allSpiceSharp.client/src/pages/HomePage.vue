@@ -7,8 +7,8 @@
           <div class="col-2">
             <div class="d-flex justify-content-end search">
               <form @submit.prevent="searchRecipes" class="input-group">
-                <input v-model="editable" class="form-control rounded" type="text" name="recipe" id="recipe"
-                  placeholder="Search recipes by Category...">
+                <input v-model="search" class="form-control rounded" type="text" name="recipe" id="recipe"
+                  placeholder="Search recipes by category">
                 <button type="submit" title="Search Recipes by Category" class="btn btn-success w-20">
                   <i class="mdi mdi-magnify"></i>
                 </button>
@@ -70,7 +70,7 @@ import ModalComponent from "../components/ModalComponent.vue";
 
 export default {
   setup() {
-    const editable = ref('')
+    const search = ref('')
 
     async function getRecipes() {
       try {
@@ -85,9 +85,10 @@ export default {
     return {
       recipes: computed(() => AppState.recipes),
       getRecipes,
-      editable,
+      search,
 
-      getMyRecipes() {
+      async getMyRecipes() {
+        await recipesService.getRecipes()
         AppState.recipes = AppState.recipes.filter(r => r.creatorId == AppState.account.id);
       },
 
@@ -103,8 +104,8 @@ export default {
 
       async searchRecipes() {
         try {
-          await recipesService.searchRecipes(editable.value)
-          this.editable = ''
+          await recipesService.searchRecipes(search.value)
+          this.search = ''
         } catch (error) {
           logger.error(error)
           Pop.error(error.message)

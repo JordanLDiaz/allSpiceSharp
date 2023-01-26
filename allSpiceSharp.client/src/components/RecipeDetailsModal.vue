@@ -8,7 +8,12 @@
         <div class="col-8">
           <div class="row justify-content-end">
             <div class="col-1">
-              <button class="btn text-danger fs-5" title="Delete Recipe"><i class="mdi mdi-delete"></i></button>
+              <button @click="favoriteRecipe" class="btn text-success fs-5" title="Favorite Recipe"><i
+                  class="mdi mdi-heart"></i></button>
+            </div>
+            <div class="col-1">
+              <button @click="deleteRecipe" class="btn text-danger fs-5" title="Delete Recipe"><i
+                  class="mdi mdi-delete"></i></button>
             </div>
             <button type="button" class="btn-close me-2 mt-2" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
@@ -44,41 +49,45 @@ import { AppState } from '../AppState';
 import { computed, reactive, onMounted, watchEffect, ref } from 'vue';
 import { logger } from "../utils/Logger.js";
 import Pop from "../utils/Pop.js";
-import { ingredientsService } from "../services/IngredientsService.js"
-
+import { favoritesService } from '../services/FavoritesService.js';
+import { recipesService } from '../services/RecipesService.js';
+import { Modal } from 'bootstrap';
 
 export default {
 
   setup() {
-    // const ingredients = ref({});
-
-    watchEffect(() => {
-      if (AppState.activeRecipe) {
-        getIngredients()
-      }
-    })
-
-
-    async function getIngredients() {
-      try {
-        await ingredientsService.getIngredients()
-      } catch (error) {
-        logger.error(error)
-        Pop.error(error.message)
-      }
-    }
-
-    onMounted(() => getIngredients())
 
     return {
-      getIngredients,
       activeRecipe: computed(() => AppState.activeRecipe),
       ingredients: computed(() => AppState.ingredients),
       recipe: computed(() => AppState.activeRecipe),
+      account: computed(() => AppState.account),
 
+      async deleteRecipe() {
+        try {
+          // logger.log('click delete', AppState.activeRecipe.id)
+          const recipeId = AppState.activeRecipe.id
+          await recipesService.deleteRecipe(recipeId)
+          Modal.getOrCreateInstance('#recipeDetailModal').hide()
+        } catch (error) {
+          logger.error(error)
+          Pop.error(error.message)
+        }
+      },
+
+      async favoriteRecipe() {
+        try {
+          logger.log('clicked heart', AppState.activeRecipe.id)
+          const favoriteData = { recipeId: AppState.activeRecipe.id }
+          await favoritesService.favoriteRecipe(favoriteData)
+        } catch (error) {
+          logger.error(error)
+          Pop.error(error.message)
+        }
+      }
     }
   }
-};
+}
 </script>
 
 
@@ -89,7 +98,4 @@ export default {
   width: 100%;
   object-fit: cover;
 }
-
-// .ingredient-card,
-// .instructions-card {}
 </style>
