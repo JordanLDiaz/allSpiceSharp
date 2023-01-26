@@ -9,7 +9,8 @@
     <div class="col-11">
       <h4>{{ recipe.title }}</h4>
     </div>
-    <h3 class="col-1 p-1"><i class="mdi mdi-heart text-success"></i></h3>
+    <h3 v-if="!recipe.favoriteId" class="col-1 p-1"><i class="mdi mdi-heart-outline text-success"></i></h3>
+    <h3 v-else class="col-1 p-1"><i class="mdi mdi-heart text-success"></i></h3>
   </div>
 </template>
 

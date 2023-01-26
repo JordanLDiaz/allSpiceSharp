@@ -21,12 +21,17 @@
             <option value="asian">Asian</option>
             <option value="breakfast">Breakfast</option>
             <option value="cheese">Cheese</option>
+            <option value="cheese">Chinese</option>
+            <option value="cheese">Coffee</option>
             <option value="dessert">Dessert</option>
+            <option value="dessert">Drinks</option>
+            <option value="soup">Indian</option>
             <option value="italian">Italian</option>
             <option value="mexican">Mexican</option>
             <option value="salad">Salad</option>
             <option value="seafood">Seafood</option>
             <option value="soup">Soup</option>
+            <option value="soup">Vegetarian</option>
             <option value="misc">Misc.</option>
           </select>
         </div>

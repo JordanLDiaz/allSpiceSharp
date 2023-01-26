@@ -31,9 +31,10 @@
     <section class="row mt-2 justify-content-center my-2">
       <div class="col-4 d-flex justify-content-between">
         <button @click="getRecipes()" class="btn btn-success bg-success text-light mx-1 elevation-5">Home</button>
-        <button @click="getMyRecipes()" class="btn btn-success bg-success text-light mx-1 elevation-5">My
+        <button v-if="account.id" @click="getMyRecipes()"
+          class="btn btn-success bg-success text-light mx-1 elevation-5">My
           Recipes</button>
-        <button @click="getFavorites()"
+        <button v-if="account.id" @click="getFavorites()"
           class="btn btn-success bg-success text-light mx-1 elevation-5">Favorites</button>
       </div>
     </section>
@@ -48,8 +49,8 @@
 
   <!-- SECTION Add Recipe Button -->
   <section class="position-fixed bottom-0 end-0 p-2">
-    <button class="btn btn-success bg-success elevation-5 rounded-circle" style="height: 60px; width: 60px"
-      data-bs-toggle="modal" data-bs-target="#addRecipeForm">
+    <button v-if="account.id" class="btn btn-success bg-success elevation-5 rounded-circle"
+      style="height: 60px; width: 60px" data-bs-toggle="modal" data-bs-target="#addRecipeForm">
       <i class="mdi mdi-plus-circle selectable text-light fs-2" title="Add Recipe"></i>
     </button>
   </section>
@@ -84,6 +85,7 @@ export default {
     onMounted(() => getRecipes());
     return {
       recipes: computed(() => AppState.recipes),
+      account: computed(() => AppState.account),
       getRecipes,
       search,
 
