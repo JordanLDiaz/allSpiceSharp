@@ -1,5 +1,7 @@
+-- Active: 1680282356336@@54.187.169.182@3306@classroom_demos
+
 CREATE TABLE
-    IF NOT EXISTS accounts(
+    IF NOT EXISTS JDaccounts(
         id VARCHAR(255) NOT NULL primary key COMMENT 'primary key',
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time Created',
         updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last Update',
@@ -9,62 +11,68 @@ CREATE TABLE
     ) default charset utf8 COMMENT '';
 
 CREATE TABLE
-    IF NOT EXISTS recipes(
+    IF NOT EXISTS JDrecipes(
         id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
         title VARCHAR(50) NOT NULL,
         instructions VARCHAR(255) NOT NULL,
-        imgUrl VARCHAR(255) NOT NULL DEFAULT 'https://images.unsplash.com/photo-1633981744930-15bb79ca2c41?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+        img VARCHAR(255) NOT NULL DEFAULT 'https://images.unsplash.com/photo-1633981744930-15bb79ca2c41?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
         category VARCHAR(50) NOT NULL,
         creatorId VARCHAR(255) NOT NULL,
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT 'Time Created',
         updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last Update',
-        FOREIGN KEY (creatorId) REFERENCES accounts (id) ON DELETE CASCADE
+        FOREIGN KEY (creatorId) REFERENCES JDaccounts (id) ON DELETE CASCADE
     ) default charset utf8 COMMENT '';
 
-ALTER TABLE recipes
+DROP TABLE JDrecipes;
+
+ALTER TABLE JDrecipes
 ADD
     img VARCHAR(255) NOT NULL DEFAULT 'https://images.unsplash.com/photo-1633981744930-15bb79ca2c41?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80';
 
-SELECT recipes.*, accounts.*
-FROM recipes
-    JOIN accounts ON accounts.id = recipes.creatorId;
+SELECT
+    JDrecipes.*,
+    JDaccounts.*
+FROM JDrecipes
+    JOIN JDaccounts ON JDaccounts.id = JDrecipes.creatorId;
 
-DELETE from recipes WHERE id = 2;
+DELETE from JDrecipes WHERE id = 2;
 
 CREATE TABLE
-    IF NOT EXISTS ingredients(
+    IF NOT EXISTS JDingredients(
         id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(50) NOT NULL,
         quantity VARCHAR(50) NOT NULL,
         recipeId INT NOT NULL,
-        FOREIGN KEY (recipeId) REFERENCES recipes (id) ON DELETE CASCADE
+        FOREIGN KEY (recipeId) REFERENCES JDrecipes (id) ON DELETE CASCADE
     ) default charset utf8 COMMENT '';
 
-DROP TABLE ingredients;
+DROP TABLE JDingredients;
 
-ALTER TABLE ingredients ADD quantity VARCHAR(50) NOT NULL;
+ALTER TABLE JDingredients ADD quantity VARCHAR(50) NOT NULL;
 
 CREATE TABLE
-    IF NOT EXISTS favorites(
+    IF NOT EXISTS JDfavorites(
         id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
         accountId VARCHAR(255) NOT NULL,
         recipeId INT NOT NULL,
-        FOREIGN KEY (accountId) REFERENCES accounts (id) ON DELETE CASCADE,
-        FOREIGN KEY (recipeId) REFERENCES recipes (id) ON DELETE CASCADE
+        FOREIGN KEY (accountId) REFERENCES JDaccounts (id) ON DELETE CASCADE,
+        FOREIGN KEY (recipeId) REFERENCES JDrecipes (id) ON DELETE CASCADE
     ) default charset utf8 COMMENT '';
+
+DROP TABLE JDfavorites;
 
 INSERT INTO
     favorites (accountId, recipeId)
 VALUES ('639c98024e8bdfbd33b7666a', 3);
 
 SELECT
-    accounts.*,
-    favorites.id
-FROM favorites
-    JOIN accounts ON favorites.`accountId` = accounts.id;
+    JDaccounts.*,
+    JDfavorites.id
+FROM JDfavorites
+    JOIN JDaccounts ON JDfavorites.`accountId` = JDaccounts.id;
 
 INSERT INTO
-    recipes (
+    JDrecipes (
         title,
         instructions,
         img,
@@ -81,7 +89,7 @@ VALUES (
 
 SELECT LAST_INSERT_ID();
 
-UPDATE recipes
+UPDATE JDrecipes
 Set
     title = 'Pizza',
     instructions = 'Make the dough, make the sauce, cut the toppings, make the za, bake it in the oven',
